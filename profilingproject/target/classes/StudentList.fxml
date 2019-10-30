@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="StudentListController">
+    <children>
+        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <top>
+                <VBox prefWidth="600.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <MenuBar prefHeight="27.0">
+                            <menus>
+                                <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
+                                    <items>
+                                        <MenuItem fx:id="newMenuItem" mnemonicParsing="false" onAction="#handleNewFile" text="New" />
+                                        <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#handleOpenFile" text="Open..." />
+                                        <MenuItem fx:id="saveAsMenuItem" mnemonicParsing="false" onAction="#handleSaveFile" text="Save as..." />
+                                        <MenuItem fx:id="mergeWithMenuItem" mnemonicParsing="false" onAction="#handleMergeWithFile" text="Merge with..." />
+                                        <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#handleExitProgram" text="Exit" />
+                                    </items>
+                                </Menu>
+                                <Menu fx:id="editMenu" mnemonicParsing="false" text="Edit">
+                                    <items>
+                                        <MenuItem fx:id="addMenuItem" mnemonicParsing="false" onAction="#handleAddStudent" text="Add" />
+                                        <MenuItem fx:id="editMenuItem" mnemonicParsing="false" onAction="#handleEditStudent" text="Edit" />
+                                        <MenuItem fx:id="deleteMenuItem" mnemonicParsing="false" onAction="#handleDeleteStudent" text="Delete" />
+                                    </items>
+                                </Menu>
+                                <Menu fx:id="helpMenu" mnemonicParsing="false" text="Help">
+                                    <items>
+                                        <MenuItem fx:id="aboutMenuItem" mnemonicParsing="false" onAction="#handleAboutProgram" text="About" />
+                                    </items>
+                                </Menu>
+                            </menus>
+                        </MenuBar>
+                        <ToolBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="23.0" prefWidth="600.0">
+                            <items>
+                                <Button fx:id="newButtonToolBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleNewFile" prefHeight="25.0" prefWidth="25.0">
+                                    <graphic>
+                                        <ImageView pickOnBounds="true" preserveRatio="true" smooth="false">
+                                            <image>
+                                                <Image url="@image/new.png" />
+                                            </image>
+                                            <viewport>
+                                                <Rectangle2D height="18.0" minX="1.0" minY="1.0" width="18.0" />
+                                            </viewport>
+                                        </ImageView>
+                                    </graphic>
+                                    <tooltip>
+                                        <Tooltip text="New file" />
+                                    </tooltip></Button>
+                                <Button fx:id="openButtonToolBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleOpenFile" prefHeight="25.0" prefWidth="25.0">
+                                    <graphic>
+                                        <ImageView fx:id="newImageView" pickOnBounds="true" preserveRatio="true" smooth="false">
+                                            <image>
+                                                <Image url="@image/open.png" />
+                                            </image>
+                                            <viewport>
+                                                <Rectangle2D height="18.0" minX="2.0" minY="1.0" width="18.0" />
+                                            </viewport>
+                                        </ImageView>
+                                    </graphic>
+                                    <tooltip>
+                                        <Tooltip text="Open file" />
+                                    </tooltip></Button>
+                                <Button fx:id="saveButtonToolBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleSaveFile" prefHeight="25.0" prefWidth="25.0">
+                                    <graphic>
+                                        <ImageView pickOnBounds="true" preserveRatio="true" smooth="false">
+                                            <image>
+                                                <Image url="@image/save.png" />
+                                            </image>
+                                            <viewport>
+                                                <Rectangle2D height="18.0" minX="1.0" minY="1.0" width="18.0" />
+                                            </viewport>
+                                        </ImageView>
+                                    </graphic>
+                                    <tooltip>
+                                        <Tooltip text="Save file" />
+                                    </tooltip></Button>
+                                <Button fx:id="mergeWithButtonToolBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleMergeWithFile" prefHeight="25.0" prefWidth="25.0">
+                                    <graphic>
+                                        <ImageView pickOnBounds="true" preserveRatio="true" smooth="false">
+                                            <image>
+                                                <Image url="@image/merge.png" />
+                                            </image>
+                                            <viewport>
+                                                <Rectangle2D height="18.0" minX="1.0" minY="1.0" width="18.0" />
+                                            </viewport>
+                                        </ImageView>
+                                    </graphic>
+                                    <tooltip>
+                                        <Tooltip text="Merge with file" />
+                                    </tooltip></Button>
+                                <Separator orientation="VERTICAL">
+                                    <padding>
+                                        <Insets left="2.0" />
+                                    </padding>
+                                </Separator>
+                                <Button fx:id="addButtonToolBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleAddStudent" prefHeight="25.0" prefWidth="25.0">
+                                    <graphic>
+                                        <ImageView pickOnBounds="true" preserveRatio="true" smooth="false">
+                                            <image>
+                                                <Image url="@image/add.png" />
+                                            </image>
+                                            <viewport>
+                                                <Rectangle2D height="18.0" minX="2.0" minY="1.0" width="18.0" />
+                                            </viewport>
+                                        </ImageView>
+                                    </graphic>
+                                    <tooltip>
+                                        <Tooltip text="Add new student" />
+                                    </tooltip></Button>
+                                <Button fx:id="editButtonToolBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleEditStudent" prefHeight="25.0" prefWidth="25.0">
+                                    <graphic>
+                                        <ImageView pickOnBounds="true" preserveRatio="true" smooth="false">
+                                            <image>
+                                                <Image url="@image/edit.png" />
+                                            </image>
+                                            <viewport>
+                                                <Rectangle2D height="18.0" minX="3.0" minY="1.0" width="18.0" />
+                                            </viewport>
+                                        </ImageView>
+                                    </graphic>
+                                    <tooltip>
+                                        <Tooltip text="Edit selected student" />
+                                    </tooltip></Button>
+                                <Button fx:id="deleteButtonToolBar" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDeleteStudent" prefHeight="25.0" prefWidth="25.0">
+                                    <graphic>
+                                        <ImageView pickOnBounds="true" preserveRatio="true" smooth="false">
+                                            <image>
+                                                <Image url="@image/delete.png" />
+                                            </image>
+                                            <viewport>
+                                                <Rectangle2D height="18.0" minX="1.0" minY="1.0" width="18.0" />
+                                            </viewport>
+                                        </ImageView>
+                                    </graphic>
+                                    <tooltip>
+                                        <Tooltip text="Remove selected student" />
+                                    </tooltip></Button>
+                            </items>
+                        </ToolBar>
+                        <HBox alignment="CENTER" prefHeight="25.0" spacing="5.0">
+                            <children>
+                                <TextField fx:id="searchTextField" onKeyReleased="#handleEnterTyped" prefHeight="25.0" prefWidth="435.0">
+                                    <HBox.margin>
+                                        <Insets />
+                                    </HBox.margin>
+                                </TextField>
+                                <Button fx:id="searchButton" mnemonicParsing="false" onAction="#handleSearch" prefHeight="25.0" prefWidth="100.0" text="Search">
+                                    <VBox.margin>
+                                        <Insets left="30.0" top="15.0" />
+                                    </VBox.margin>
+                                </Button>
+                            </children>
+                            <VBox.margin>
+                                <Insets left="30.0" right="30.0" top="15.0" />
+                            </VBox.margin>
+                        </HBox>
+                    </children>
+                </VBox>
+            </top>
+            <center>
+                <TableView fx:id="studentTableView" BorderPane.alignment="CENTER">
+                    <columns>
+                        <TableColumn fx:id="surnameTableColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="115.0" text="Surname" />
+                        <TableColumn fx:id="nameTableColumn" prefWidth="115.0" text="Name" />
+                        <TableColumn fx:id="patronymicTableColumn" prefWidth="115.0" text="Patronymic" />
+                        <TableColumn fx:id="groupTableColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="100.0" text="Group" />
+                        <TableColumn fx:id="averageGradeTableColumn" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="93.0" text="Average Grade" />
+                    </columns>
+                    <BorderPane.margin>
+                        <Insets bottom="15.0" left="30.0" right="30.0" top="15.0" />
+                    </BorderPane.margin>
+                </TableView>
+            </center>
+            <bottom>
+                <HBox alignment="CENTER_LEFT" prefHeight="15.0" prefWidth="600.0" spacing="377.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Label fx:id="statusLabel" />
+                        <Label fx:id="errorLabel" textFill="RED" />
+                    </children>
+                    <BorderPane.margin>
+                        <Insets left="5.0" right="5.0" />
+                    </BorderPane.margin>
+                </HBox>
+            </bottom>
+        </BorderPane>
+    </children>
+</AnchorPane>
