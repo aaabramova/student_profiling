@@ -108,6 +108,20 @@ public class StudentListController {
         }
     }
 
+    @FXML
+    private void handleSaveFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Data File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XLSX files", "*.xlsx"));
+        File file = fileChooser.showSaveDialog(null);
+
+        try {
+            writeIntoExcel(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void readFromExcel(List<File> files) throws IOException{
         String fullname = "";
         String group = "";
@@ -126,11 +140,9 @@ public class StudentListController {
 
                 if (row.getCell(1).getCellType() == XSSFCell.CELL_TYPE_STRING && row.getCell(1) != null && !row.getCell(1).equals("")) {
                     fullname = row.getCell(1).getStringCellValue();
-                    //System.out.println(fullname);
                 } else {
                     continue;
                 }
-
 
                 if (row.getCell(2).getCellType() == XSSFCell.CELL_TYPE_STRING && row.getCell(2) != null && !row.getCell(2).equals("")) {
                     group = row.getCell(2).getStringCellValue();
@@ -143,6 +155,7 @@ public class StudentListController {
                 } else {
                     averageGrade = 0;
                 }
+
                 String name[] = fullname.split(" ");
                 main.getStudentList().add(new Student(name[0], name[1], name[2], group, averageGrade));
             }
@@ -151,6 +164,98 @@ public class StudentListController {
         }
     }
 
+    /**
+     * Записываем полученные по профилям группы в книгу Excel.
+     *
+     * @param files
+     * @throws IOException
+     */
+    private void writeIntoExcel(File file) throws IOException {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+
+        makeSheets(workbook, main.getStudentList());
+
+        if(file != null) {
+            FileOutputStream outFile = new FileOutputStream(file);
+            workbook.write(outFile);
+            outFile.close();
+        }
+    }
+
+    private void makeSheets(XSSFWorkbook workbook, ObservableList<Student> list) {
+        XSSFSheet sheet = workbook.createSheet("Лист 1");
+
+        int rownum = 0;
+        Cell cell;
+        Row row;
+
+        row = sheet.createRow(rownum++);
+
+        cell = row.createCell(0);
+        cell.setCellValue("№");
+
+        cell = row.createCell(1);
+        cell.setCellValue("Фамилия Имя Отчество");
+
+        cell = row.createCell(2);
+        cell.setCellValue("Группа");
+
+        cell = row.createCell(3);
+        cell.setCellValue("Средний балл");
+
+
+        int counter = 0;
+
+        for (Student student : list) {
+            row = sheet.createRow(rownum++);
+
+            cell = row.createCell(0);
+            cell.setCellValue((counter++) + 1);
+            cell = row.createCell(1);
+            cell.setCellValue(student.getSurname() + " " + student.getName() + " " + student.getPatronymic());
+            cell = row.createCell(2);
+            cell.setCellValue(student.getGroup());
+            cell = row.createCell(3);
+            cell.setCellValue(student.getAverageGrade());
+        }
+
+        sheet.autoSizeColumn(0);
+        sheet.autoSizeColumn(1);
+        sheet.autoSizeColumn(2);
+        sheet.autoSizeColumn(3);
+    }
+
+    @FXML
+    private void handleMergeWithFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Resource File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XLSX files", "*.xlsx"));
+
+        List<File> files = fileChooser.showOpenMultipleDialog(null);
+        if (files != null) {
+            errorLabel.setText("");
+            try {
+                readFromExcel(files);
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML
+    private void handleDeleteStudent() {
+        int selectedItem = studentTableView.getSelectionModel().getSelectedIndex();
+        if (selectedItem >= 0) {
+            boolean answer = confirmWindow.showConfirmWindow("Confirm remove selected person",
+                    "Are you sure you want to remove selected item?");
+            if (answer) {
+                studentTableView.getItems().remove(selectedItem);
+                statusLabel.setText("Elements in table: " + studentTableView.getItems().size());
+            }
+        } else {
+            errorLabel.setText("No student selected!");
+        }
+    }
 
     @FXML
     private void handleAddStudent() {
@@ -183,7 +288,7 @@ public class StudentListController {
         VBox vbox = new VBox();
         vbox.setAlignment(Pos.CENTER);
         vbox.setSpacing(10);
-        Label lbl1 = new Label("Developed by ");
+        Label lbl1 = new Label("Developed by");
         Label lbl2 = new Label("group IKPI-61");
         Label lbl3 = new Label("in 2019");
         Button btnOk = new Button("OK");
@@ -209,5 +314,33 @@ public class StudentListController {
         }
     }
 
+    @FXML
+    private void handleSearch() {
+        String key = searchTextField.getText();
+
+        if (key == null || key.length() == 0) {
+            studentTableView.setItems(main.getStudentList());
+            return;
+        }
+
+        ObservableList<Student> findedStudents = FXCollections.observableArrayList();
+        Pattern pattern = Pattern.compile("(?i)" + key.toLowerCase());
+
+        for (Student student : main.getStudentList()) {
+           if (pattern.matcher(student.getSurname().toLowerCase()).find() || pattern.matcher(student.getName().toLowerCase()).find() ||
+                    pattern.matcher(student.getPatronymic().toLowerCase()).find() || pattern.matcher(student.getGroup().toLowerCase()).find() ||
+                    pattern.matcher(String.valueOf(student.getAverageGrade())).find()) {
+                findedStudents.add(student);
+           }
+        }
+        studentTableView.setItems(findedStudents);
+        statusLabel.setText("Elements in table: " + studentTableView.getItems().size());
+    }
+
+    @FXML
+    private void handleEnterTyped(KeyEvent event) {
+        if (event.getCode().getName().equals("Enter")) {
+            handleSearch();
+        }
     }
 }
