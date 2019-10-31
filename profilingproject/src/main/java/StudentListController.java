@@ -112,7 +112,6 @@ public class StudentListController {
         String fullname = "";
         String group = "";
         double averageGrade = 0;
-        //boolean isContract = false;
 
         for(File file : files) {
             XSSFWorkbook myExcelBook = new XSSFWorkbook(new FileInputStream(file));
@@ -122,7 +121,6 @@ public class StudentListController {
             Row row = rowIterator.next();
 
             while(rowIterator.hasNext()) {
-                //ArrayList<Integer> priority  = new ArrayList<Integer>();
 
                 row = rowIterator.next();
 
@@ -132,6 +130,7 @@ public class StudentListController {
                 } else {
                     continue;
                 }
+
 
                 if (row.getCell(2).getCellType() == XSSFCell.CELL_TYPE_STRING && row.getCell(2) != null && !row.getCell(2).equals("")) {
                     group = row.getCell(2).getStringCellValue();
@@ -144,7 +143,6 @@ public class StudentListController {
                 } else {
                     averageGrade = 0;
                 }
-
                 String name[] = fullname.split(" ");
                 main.getStudentList().add(new Student(name[0], name[1], name[2], group, averageGrade));
             }
@@ -152,6 +150,28 @@ public class StudentListController {
             myExcelBook.close();
         }
     }
+
+
+    @FXML
+    private void handleAddStudent() {
+        Student tempStudent = new Student();
+        boolean okClicked = main.showStudentEditDialog(tempStudent);
+        if (okClicked) {
+            main.getStudentList().add(tempStudent);
+            statusLabel.setText("Elements in table: " + studentTableView.getItems().size());
+        }
+    }
+
+    @FXML
+    private void handleEditStudent() {
+        Student selectedStudent = studentTableView.getSelectionModel().getSelectedItem();
+        if (selectedStudent != null) {
+            main.showStudentEditDialog(selectedStudent);
+        } else {
+            errorLabel.setText("No student selected!");
+        }
+    }
+
     @FXML
     private void handleAboutProgram() {
         showAboutWindow();
@@ -187,5 +207,7 @@ public class StudentListController {
         if (answer) {
             System.exit(1);
         }
+    }
+
     }
 }
