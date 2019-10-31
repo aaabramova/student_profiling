@@ -108,6 +108,20 @@ public class StudentListController {
         }
     }
 
+    @FXML
+    private void handleSaveFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Data File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XLSX files", "*.xlsx"));
+        File file = fileChooser.showSaveDialog(null);
+
+        try {
+            writeIntoExcel(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void readFromExcel(List<File> files) throws IOException{
         String fullname = "";
         String group = "";
@@ -130,7 +144,6 @@ public class StudentListController {
                     continue;
                 }
 
-
                 if (row.getCell(2).getCellType() == XSSFCell.CELL_TYPE_STRING && row.getCell(2) != null && !row.getCell(2).equals("")) {
                     group = row.getCell(2).getStringCellValue();
                 } else {
@@ -142,6 +155,7 @@ public class StudentListController {
                 } else {
                     averageGrade = 0;
                 }
+
                 String name[] = fullname.split(" ");
                 main.getStudentList().add(new Student(name[0], name[1], name[2], group, averageGrade));
             }
@@ -150,6 +164,67 @@ public class StudentListController {
         }
     }
 
+
+    /**
+     * Записываем полученные по профилям группы в книгу Excel.
+     *
+     * @param files
+     * @throws IOException
+     */
+    private void writeIntoExcel(File file) throws IOException {
+        XSSFWorkbook workbook = new XSSFWorkbook();
+
+        makeSheets(workbook, main.getStudentList());
+
+        if(file != null) {
+            FileOutputStream outFile = new FileOutputStream(file);
+            workbook.write(outFile);
+            outFile.close();
+        }
+    }
+
+    private void makeSheets(XSSFWorkbook workbook, ObservableList<Student> list) {
+        XSSFSheet sheet = workbook.createSheet("Лист 1");
+
+        int rownum = 0;
+        Cell cell;
+        Row row;
+
+        row = sheet.createRow(rownum++);
+
+        cell = row.createCell(0);
+        cell.setCellValue("№");
+
+        cell = row.createCell(1);
+        cell.setCellValue("Фамилия Имя Отчество");
+
+        cell = row.createCell(2);
+        cell.setCellValue("Группа");
+
+        cell = row.createCell(3);
+        cell.setCellValue("Средний балл");
+
+
+        int counter = 0;
+
+        for (Student student : list) {
+            row = sheet.createRow(rownum++);
+
+            cell = row.createCell(0);
+            cell.setCellValue((counter++) + 1);
+            cell = row.createCell(1);
+            cell.setCellValue(student.getSurname() + " " + student.getName() + " " + student.getPatronymic());
+            cell = row.createCell(2);
+            cell.setCellValue(student.getGroup());
+            cell = row.createCell(3);
+            cell.setCellValue(student.getAverageGrade());
+        }
+
+        sheet.autoSizeColumn(0);
+        sheet.autoSizeColumn(1);
+        sheet.autoSizeColumn(2);
+        sheet.autoSizeColumn(3);
+    }
     @FXML
     private void handleMergeWithFile() {
         FileChooser fileChooser = new FileChooser();
@@ -236,6 +311,36 @@ public class StudentListController {
                 "Are you sure you want to exit the program without saving?");
         if (answer) {
             System.exit(1);
+        }
+    }
+
+    @FXML
+    private void handleSearch() {
+        String key = searchTextField.getText();
+
+        if (key == null || key.length() == 0) {
+            studentTableView.setItems(main.getStudentList());
+            return;
+        }
+
+        ObservableList<Student> findedStudents = FXCollections.observableArrayList();
+        Pattern pattern = Pattern.compile("(?i)" + key.toLowerCase());
+
+        for (Student student : main.getStudentList()) {
+           if (pattern.matcher(student.getSurname().toLowerCase()).find() || pattern.matcher(student.getName().toLowerCase()).find() ||
+                    pattern.matcher(student.getPatronymic().toLowerCase()).find() || pattern.matcher(student.getGroup().toLowerCase()).find() ||
+                    pattern.matcher(String.valueOf(student.getAverageGrade())).find()) {
+                findedStudents.add(student);
+           }
+        }
+        studentTableView.setItems(findedStudents);
+        statusLabel.setText("Elements in table: " + studentTableView.getItems().size());
+    }
+
+    @FXML
+    private void handleEnterTyped(KeyEvent event) {
+        if (event.getCode().getName().equals("Enter")) {
+            handleSearch();
         }
     }
 }
