@@ -142,7 +142,6 @@ public class StudentListController {
                 } else {
                     averageGrade = 0;
                 }
-
                 String name[] = fullname.split(" ");
                 main.getStudentList().add(new Student(name[0], name[1], name[2], group, averageGrade));
             }
