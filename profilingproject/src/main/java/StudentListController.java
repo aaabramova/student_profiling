@@ -164,6 +164,7 @@ public class StudentListController {
         }
     }
 
+
     /**
      * Записываем полученные по профилям группы в книгу Excel.
      *
@@ -224,7 +225,6 @@ public class StudentListController {
         sheet.autoSizeColumn(2);
         sheet.autoSizeColumn(3);
     }
-
     @FXML
     private void handleMergeWithFile() {
         FileChooser fileChooser = new FileChooser();
