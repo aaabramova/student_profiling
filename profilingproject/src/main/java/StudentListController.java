@@ -24,9 +24,45 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class StudentListController {
+    @FXML
+    private TableView<Student> studentTableView;
+    @FXML
+    private TableColumn<Student, String> surnameTableColumn;
+    @FXML
+    private TableColumn<Student, String> nameTableColumn;
+    @FXML
+    private TableColumn<Student, String> patronymicTableColumn;
+    @FXML
+    private TableColumn<Student, String> groupTableColumn;
+    @FXML
+    private TableColumn<Student, Double> averageGradeTableColumn;
+    @FXML
+    private TextField searchTextField;
+    @FXML
+    private Label statusLabel;
+    @FXML
+    private Label errorLabel;
 
     private Main main;
     ConfirmWindow confirmWindow = new ConfirmWindow();
+
+    @FXML
+    private void initialize() {
+        surnameTableColumn.setCellValueFactory(cellData -> cellData.getValue().surnameProperty());
+        nameTableColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        patronymicTableColumn.setCellValueFactory(cellData -> cellData.getValue().patronymicProperty());
+        groupTableColumn.setCellValueFactory(cellData -> cellData.getValue().groupProperty());
+        averageGradeTableColumn.setCellValueFactory(cellData -> cellData.getValue().averageGradeProperty().asObject());
+
+        statusLabel.setText("Elements in table: " + studentTableView.getItems().size());
+
+        studentTableView.getSelectionModel().getSelectedCells().addListener(new ListChangeListener<TablePosition>() {
+            @Override
+            public void onChanged(Change<? extends TablePosition> c) {
+                errorLabel.setText("");
+            }
+        });
+    }
 
     public void setMain(Main main) {
         this.main = main;
@@ -71,10 +107,12 @@ public class StudentListController {
             }
         }
     }
+
     private void readFromExcel(List<File> files) throws IOException{
         String fullname = "";
         String group = "";
         double averageGrade = 0;
+        //boolean isContract = false;
 
         for(File file : files) {
             XSSFWorkbook myExcelBook = new XSSFWorkbook(new FileInputStream(file));
@@ -84,11 +122,13 @@ public class StudentListController {
             Row row = rowIterator.next();
 
             while(rowIterator.hasNext()) {
+                //ArrayList<Integer> priority  = new ArrayList<Integer>();
 
                 row = rowIterator.next();
 
                 if (row.getCell(1).getCellType() == XSSFCell.CELL_TYPE_STRING && row.getCell(1) != null && !row.getCell(1).equals("")) {
                     fullname = row.getCell(1).getStringCellValue();
+                    //System.out.println(fullname);
                 } else {
                     continue;
                 }
@@ -104,6 +144,7 @@ public class StudentListController {
                 } else {
                     averageGrade = 0;
                 }
+
                 String name[] = fullname.split(" ");
                 main.getStudentList().add(new Student(name[0], name[1], name[2], group, averageGrade));
             }
@@ -122,7 +163,7 @@ public class StudentListController {
         VBox vbox = new VBox();
         vbox.setAlignment(Pos.CENTER);
         vbox.setSpacing(10);
-        Label lbl1 = new Label("Developed by");
+        Label lbl1 = new Label("Developed by ");
         Label lbl2 = new Label("group IKPI-61");
         Label lbl3 = new Label("in 2019");
         Button btnOk = new Button("OK");
