@@ -70,24 +70,6 @@ public class StudentListController {
         });
     }
 
-    @FXML
-    private void initialize() {
-        surnameTableColumn.setCellValueFactory(cellData -> cellData.getValue().surnameProperty());
-        nameTableColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-        patronymicTableColumn.setCellValueFactory(cellData -> cellData.getValue().patronymicProperty());
-        groupTableColumn.setCellValueFactory(cellData -> cellData.getValue().groupProperty());
-        averageGradeTableColumn.setCellValueFactory(cellData -> cellData.getValue().averageGradeProperty().asObject());
-
-        statusLabel.setText("Elements in table: " + studentTableView.getItems().size());
-
-        studentTableView.getSelectionModel().getSelectedCells().addListener(new ListChangeListener<TablePosition>() {
-            @Override
-            public void onChanged(Change<? extends TablePosition> c) {
-                errorLabel.setText("");
-            }
-        });
-    }
-
     public void setMain(Main main) {
         this.main = main;
         studentTableView.setItems(main.getStudentList());
@@ -135,8 +117,6 @@ public class StudentListController {
         }
     }
 
-<<<<<<< Updated upstream
-=======
     @FXML
     private void handleSaveFile() {
         FileChooser fileChooser = new FileChooser();
@@ -151,7 +131,6 @@ public class StudentListController {
         }
     }
 
->>>>>>> Stashed changes
     private void readFromExcel(List<File> files) throws IOException{
         String fullname = "";
         String group = "";
@@ -171,11 +150,9 @@ public class StudentListController {
 
                 if (row.getCell(1).getCellType() == XSSFCell.CELL_TYPE_STRING && row.getCell(1) != null && !row.getCell(1).equals("")) {
                     fullname = row.getCell(1).getStringCellValue();
-                    //System.out.println(fullname);
                 } else {
                     continue;
                 }
-
 
                 if (row.getCell(2).getCellType() == XSSFCell.CELL_TYPE_STRING && row.getCell(2) != null && !row.getCell(2).equals("")) {
                     group = row.getCell(2).getStringCellValue();
@@ -206,16 +183,6 @@ public class StudentListController {
         }
     }
 
-<<<<<<< Updated upstream
-
-    @FXML
-    private void handleAddStudent() {
-        Student tempStudent = new Student();
-        boolean okClicked = main.showStudentEditDialog(tempStudent);
-        if (okClicked) {
-            main.getStudentList().add(tempStudent);
-            statusLabel.setText("Elements in table: " + studentTableView.getItems().size());
-=======
     /**
      * Записываем полученные по профилям группы в книгу Excel.
      *
@@ -316,17 +283,10 @@ public class StudentListController {
             } catch(IOException e) {
                 e.printStackTrace();
             }
->>>>>>> Stashed changes
         }
     }
 
     @FXML
-<<<<<<< Updated upstream
-    private void handleEditStudent() {
-        Student selectedStudent = studentTableView.getSelectionModel().getSelectedItem();
-        if (selectedStudent != null) {
-            main.showStudentEditDialog(selectedStudent);
-=======
     private void handleDeleteStudent() {
         int selectedItem = studentTableView.getSelectionModel().getSelectedIndex();
         if (selectedItem >= 0) {
@@ -336,14 +296,11 @@ public class StudentListController {
                 studentTableView.getItems().remove(selectedItem);
                 statusLabel.setText("Elements in table: " + studentTableView.getItems().size());
             }
->>>>>>> Stashed changes
         } else {
             errorLabel.setText("No student selected!");
         }
     }
 
-<<<<<<< Updated upstream
-=======
     @FXML
     private void handleAddStudent() {
         Student tempStudent = new Student();
@@ -354,7 +311,6 @@ public class StudentListController {
         }
     }
 
->>>>>>> Stashed changes
     @FXML
     private void handleAboutProgram() {
         showAboutWindow();
@@ -366,7 +322,7 @@ public class StudentListController {
         VBox vbox = new VBox();
         vbox.setAlignment(Pos.CENTER);
         vbox.setSpacing(10);
-        Label lbl1 = new Label("Developed by ");
+        Label lbl1 = new Label("Developed by");
         Label lbl2 = new Label("group IKPI-61");
         Label lbl3 = new Label("in 2019");
         Button btnOk = new Button("OK");
@@ -392,8 +348,6 @@ public class StudentListController {
         }
     }
 
-<<<<<<< Updated upstream
-=======
     @FXML
     private void handleComputeButton() {
         if(!main.getStudentList().isEmpty()) {
@@ -421,6 +375,5 @@ public class StudentListController {
         } catch (IOException e) {
             e.printStackTrace();
         }
->>>>>>> Stashed changes
     }
 }
