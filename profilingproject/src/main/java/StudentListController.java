@@ -312,6 +312,16 @@ public class StudentListController {
     }
 
     @FXML
+    private void handleEditStudent() {
+        Student selectedStudent = studentTableView.getSelectionModel().getSelectedItem();
+        if (selectedStudent != null) {
+            main.showStudentEditDialog(selectedStudent);
+        } else {
+            errorLabel.setText("No student selected!");
+        }
+    }
+
+    @FXML
     private void handleAboutProgram() {
         showAboutWindow();
     }
