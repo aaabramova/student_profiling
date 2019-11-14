@@ -8,7 +8,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class Main extends Application {
 
@@ -43,6 +47,8 @@ public class Main extends Application {
             });
 
             primaryStage.show();
+
+            readProfilesNamesAndQuotas(controller);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -72,6 +78,47 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    /**
+     * Читаем из файла profiles.txt количество и название профилей, а также квоту для каждой отдельной группы
+     * внутри профиля.
+     *
+     * @param controller
+     */
+    private void readProfilesNamesAndQuotas(StudentListController controller) {
+        try{
+            InputStream fstream = this.getClass().getResourceAsStream("/profiles.txt");
+            BufferedReader br = new BufferedReader(new InputStreamReader(fstream));
+            String strLine;
+
+            ArrayList<String> profilesNameList = new ArrayList<>();
+            ArrayList<Integer> subgroupProfileQuota = new ArrayList<>();
+            ArrayList<Integer> profileQuota = new ArrayList<>();
+            if((strLine = br.readLine()) != null)
+                controller.getProfiling().setProfilesNumber(Integer.parseInt(strLine));
+            for(int i = 0; i < controller.getProfiling().getProfilesNumber(); i++) {
+                if((strLine = br.readLine()) != null)
+                    profilesNameList.add(strLine);
+                if((strLine = br.readLine()) != null)
+                    subgroupProfileQuota.add(Integer.parseInt(strLine));
+                if((strLine = br.readLine()) != null)
+                    subgroupProfileQuota.add(Integer.parseInt(strLine));
+            }
+            for(int i = 0; i < controller.getProfiling().getProfilesNumber()*2; i = i + 2) {
+                profileQuota.add(subgroupProfileQuota.get(i) + subgroupProfileQuota.get(i + 1));
+            }
+
+            controller.getProfiling().setSubgroupProfileQuota(subgroupProfileQuota);
+            controller.getProfiling().setProfilesNameList(profilesNameList);
+            controller.getProfiling().setProfileQuota(profileQuota);
+
+            System.out.println(profileQuota);
+            System.out.println(profilesNameList);
+            System.out.println(subgroupProfileQuota);
+        }catch (IOException e){
+            e.printStackTrace();
         }
     }
 

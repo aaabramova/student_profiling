@@ -147,6 +147,26 @@
                                     <tooltip>
                                         <Tooltip text="Remove selected student" />
                                     </tooltip></Button>
+                        <Separator layoutX="130.0" layoutY="10.0" orientation="VERTICAL">
+                           <padding>
+                              <Insets left="2.0" />
+                           </padding>
+                        </Separator>
+                        <Button layoutX="143.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleComputeButton" prefHeight="25.0" prefWidth="25.0">
+                           <graphic>
+                              <ImageView pickOnBounds="true" preserveRatio="true" smooth="false">
+                                 <image>
+                                    <Image url="@image/compute.png" />
+                                 </image>
+                                 <viewport>
+                                    <Rectangle2D height="18.0" minX="2.0" minY="1.0" width="18.0" />
+                                 </viewport>
+                              </ImageView>
+                           </graphic>
+                           <tooltip>
+                              <Tooltip text="Distribute by profiles and save" />
+                           </tooltip>
+                        </Button>
                             </items>
                         </ToolBar>
                         <HBox alignment="CENTER" prefHeight="25.0" spacing="5.0">
