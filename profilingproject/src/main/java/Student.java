@@ -1,5 +1,7 @@
 import javafx.beans.property.*;
 
+import java.util.ArrayList;
+
 public class Student {
     private StringProperty surname;
     private StringProperty name;
@@ -77,5 +79,9 @@ public class Student {
 
     public void setAverageGrade(double averageGrade) {
         this.averageGrade.set(averageGrade);
+    }
+
+    public String getFullname() {
+        return this.surname.get() + " " + this.name.get() + " " + this.patronymic.get();
     }
 }

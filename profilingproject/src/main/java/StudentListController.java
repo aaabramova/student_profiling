@@ -44,7 +44,13 @@ public class StudentListController {
     private Label errorLabel;
 
     private Main main;
+    private Profiling profiling = new Profiling();
     ConfirmWindow confirmWindow = new ConfirmWindow();
+    private boolean isSaved = true;
+
+    public Profiling getProfiling() {
+        return profiling;
+    }
 
     @FXML
     private void initialize() {
@@ -91,6 +97,9 @@ public class StudentListController {
         }
         if (answer) {
             main.getStudentList().removeAll(main.getStudentList());
+            if(!profiling.getStudentList().isEmpty()) {
+                profiling.getStudentList().removeAll(profiling.getStudentList());
+            }
 
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Open Resource File");
@@ -133,6 +142,7 @@ public class StudentListController {
             Iterator<Row> rowIterator = sheet.iterator();
 
             Row row = rowIterator.next();
+            row = rowIterator.next();
 
             while(rowIterator.hasNext()) {
 
@@ -156,19 +166,27 @@ public class StudentListController {
                     averageGrade = 0;
                 }
 
+                ArrayList<Integer> priority = new ArrayList<>();
+                for (int i = 4; i < 7; i++) {
+                    if (row.getCell(i).getCellType() == XSSFCell.CELL_TYPE_NUMERIC) {
+                        priority.add((int)row.getCell(i).getNumericCellValue());
+                    } else {
+                        priority.add(0);
+                    }
+                }
+
                 String name[] = fullname.split(" ");
-                main.getStudentList().add(new Student(name[0], name[1], name[2], group, averageGrade));
+                main.getStudentList().add(new Student(name[0], name[1], name[2], group, priority, averageGrade));
             }
 
             myExcelBook.close();
         }
     }
 
-
     /**
      * Записываем полученные по профилям группы в книгу Excel.
      *
-     * @param files
+     * @param file
      * @throws IOException
      */
     private void writeIntoExcel(File file) throws IOException {
@@ -194,16 +212,19 @@ public class StudentListController {
 
         cell = row.createCell(0);
         cell.setCellValue("№");
+        sheet.addMergedRegion(new CellRangeAddress(0, 1, 0, 0));
 
         cell = row.createCell(1);
         cell.setCellValue("Фамилия Имя Отчество");
+        sheet.addMergedRegion(new CellRangeAddress(0, 1, 1, 1));
 
         cell = row.createCell(2);
         cell.setCellValue("Группа");
+        sheet.addMergedRegion(new CellRangeAddress(0, 1, 2, 2));
 
         cell = row.createCell(3);
         cell.setCellValue("Средний балл");
-
+        sheet.addMergedRegion(new CellRangeAddress(0, 1, 3, 3));
 
         int counter = 0;
 
@@ -213,7 +234,7 @@ public class StudentListController {
             cell = row.createCell(0);
             cell.setCellValue((counter++) + 1);
             cell = row.createCell(1);
-            cell.setCellValue(student.getSurname() + " " + student.getName() + " " + student.getPatronymic());
+            cell.setCellValue(student.getFullname());
             cell = row.createCell(2);
             cell.setCellValue(student.getGroup());
             cell = row.createCell(3);
@@ -225,6 +246,7 @@ public class StudentListController {
         sheet.autoSizeColumn(2);
         sheet.autoSizeColumn(3);
     }
+
     @FXML
     private void handleMergeWithFile() {
         FileChooser fileChooser = new FileChooser();
@@ -301,6 +323,35 @@ public class StudentListController {
                 "Are you sure you want to exit the program without saving?");
         if (answer) {
             System.exit(1);
+        }
+    }
+
+    @FXML
+    private void handleComputeButton() {
+        if(!main.getStudentList().isEmpty()) {
+            profiling.getStudentList().removeAll(profiling.getStudentList());
+            profiling.getStudentList().addAll(main.getStudentList());
+            isSaved = false;
+            for(int i = 0; i < profiling.getProfilesNumber(); i++) {
+                if(profiling.getProfileQuota().get(i) != 0) {
+                    profiling.formingGroup();
+                }
+            }
+        } else {
+            errorLabel.setText("Error: Files not open!");
+        }
+
+        profiling.formingSubgroup();
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Data File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XLSX files", "*.xlsx"));
+        File file = fileChooser.showSaveDialog(null);
+
+        try {
+            writeProfilingIntoExcel(file);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
