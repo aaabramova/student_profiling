@@ -226,6 +226,19 @@ public class StudentListController {
         cell.setCellValue("Средний балл");
         sheet.addMergedRegion(new CellRangeAddress(0, 1, 3, 3));
 
+        cell = row.createCell(4);
+        cell.setCellValue("№ профиля");
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 4, 6));
+
+        row = sheet.createRow(rownum++);
+
+        cell = row.createCell(4);
+        cell.setCellValue("1-й приоритет");
+        cell = row.createCell(5);
+        cell.setCellValue("2-й приоритет");
+        cell = row.createCell(6);
+        cell.setCellValue("3-й приоритет");
+
         int counter = 0;
 
         for (Student student : list) {
@@ -239,12 +252,21 @@ public class StudentListController {
             cell.setCellValue(student.getGroup());
             cell = row.createCell(3);
             cell.setCellValue(student.getAverageGrade());
+            cell = row.createCell(4);
+            cell.setCellValue(student.getPriority().get(0));
+            cell = row.createCell(5);
+            cell.setCellValue(student.getPriority().get(1));
+            cell = row.createCell(6);
+            cell.setCellValue(student.getPriority().get(2));
         }
 
         sheet.autoSizeColumn(0);
         sheet.autoSizeColumn(1);
         sheet.autoSizeColumn(2);
         sheet.autoSizeColumn(3);
+        sheet.autoSizeColumn(4);
+        sheet.autoSizeColumn(5);
+        sheet.autoSizeColumn(6);
     }
 
     @FXML

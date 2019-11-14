@@ -8,16 +8,18 @@ public class Student {
     private StringProperty patronymic;
     private StringProperty group;
     private DoubleProperty averageGrade;
+    private ArrayList<Integer> priority; // Список профилей по приоритету
 
     public Student() {
-        this(null, null, null, null, 0);
+        this(null, null, null, null, null, 0);
     }
 
-    public Student(String surname, String name, String patronymic, String group, double averageGrade) {
+    public Student(String surname, String name, String patronymic, String group, ArrayList<Integer> priority, double averageGrade) {
         this.surname = new SimpleStringProperty(surname);
         this.name = new SimpleStringProperty(name);
         this.patronymic = new SimpleStringProperty(patronymic);
         this.group = new SimpleStringProperty(group);
+        this.priority = priority;
         this.averageGrade = new SimpleDoubleProperty(averageGrade);
     }
 
@@ -79,6 +81,14 @@ public class Student {
 
     public void setAverageGrade(double averageGrade) {
         this.averageGrade.set(averageGrade);
+    }
+
+    public ArrayList<Integer> getPriority() {
+        return priority;
+    }
+
+    public void setPriority(ArrayList<Integer> priority) {
+        this.priority = priority;
     }
 
     public String getFullname() {
