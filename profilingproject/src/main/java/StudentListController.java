@@ -268,16 +268,6 @@ public class StudentListController {
     }
 
     @FXML
-    private void handleEditStudent() {
-        Student selectedStudent = studentTableView.getSelectionModel().getSelectedItem();
-        if (selectedStudent != null) {
-            main.showStudentEditDialog(selectedStudent);
-        } else {
-            errorLabel.setText("No student selected!");
-        }
-    }
-
-    @FXML
     private void handleAboutProgram() {
         showAboutWindow();
     }
@@ -311,36 +301,6 @@ public class StudentListController {
                 "Are you sure you want to exit the program without saving?");
         if (answer) {
             System.exit(1);
-        }
-    }
-
-    @FXML
-    private void handleSearch() {
-        String key = searchTextField.getText();
-
-        if (key == null || key.length() == 0) {
-            studentTableView.setItems(main.getStudentList());
-            return;
-        }
-
-        ObservableList<Student> findedStudents = FXCollections.observableArrayList();
-        Pattern pattern = Pattern.compile("(?i)" + key.toLowerCase());
-
-        for (Student student : main.getStudentList()) {
-           if (pattern.matcher(student.getSurname().toLowerCase()).find() || pattern.matcher(student.getName().toLowerCase()).find() ||
-                    pattern.matcher(student.getPatronymic().toLowerCase()).find() || pattern.matcher(student.getGroup().toLowerCase()).find() ||
-                    pattern.matcher(String.valueOf(student.getAverageGrade())).find()) {
-                findedStudents.add(student);
-           }
-        }
-        studentTableView.setItems(findedStudents);
-        statusLabel.setText("Elements in table: " + studentTableView.getItems().size());
-    }
-
-    @FXML
-    private void handleEnterTyped(KeyEvent event) {
-        if (event.getCode().getName().equals("Enter")) {
-            handleSearch();
         }
     }
 }
